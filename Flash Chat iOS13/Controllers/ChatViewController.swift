@@ -14,6 +14,12 @@ class ChatViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var messageTextfield: UITextField!
     
+    var messages: [Message] = [
+        Message(sender: "1@2.com", body: "Hello there, this is a test."),
+        Message(sender: "a@b.com", body: "A test? Who are you to test me?"),
+        Message(sender: "1@2.com", body: "I am you...")
+    ]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = K.appName
