@@ -28,6 +28,31 @@ class ChatViewController: UIViewController {
         title = K.appName
         navigationItem.hidesBackButton = true
         tableView.register(UINib(nibName: K.cellNibName, bundle: nil), forCellReuseIdentifier: K.cellIdentifier)
+        loadMessages()
+    }
+    
+    func loadMessages() {
+        messages = []
+        db.collection(K.FStore.collectionName).getDocuments { (querySnapshot, error) in
+            if let queryError = error {
+                print("Issue retrieving data from firestore")
+                print(queryError.localizedDescription)
+            } else {
+                if let snapshotDocuments = querySnapshot?.documents {
+                    for doc in snapshotDocuments {
+                        let data = doc.data()
+                        if let messageSender = data[K.FStore.senderField] as? String, let messageBody = data[K.FStore.bodyField] as? String {
+                            self.messages.append(Message(sender: messageSender, body: messageBody))
+                            
+                            DispatchQueue.main.async {
+                                self.tableView.reloadData()
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
     }
     
     @IBAction func sendPressed(_ sender: UIButton) {
